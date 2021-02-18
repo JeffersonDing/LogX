@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "LogX-tvOS.app"
-               BlueprintName = "LogX-tvOS"
-               ReferencedContainer = "container:LogX.xcodeproj">
+               BuildableName = "logx-tvOS.app"
+               BlueprintName = "logx-tvOS"
+               ReferencedContainer = "container:logx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "LogX-tvOSTests.xctest"
-               BlueprintName = "LogX-tvOSTests"
-               ReferencedContainer = "container:LogX.xcodeproj">
+               BuildableName = "logx-tvOSTests.xctest"
+               BlueprintName = "logx-tvOSTests"
+               ReferencedContainer = "container:logx.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "LogX-tvOS.app"
-            BlueprintName = "LogX-tvOS"
-            ReferencedContainer = "container:LogX.xcodeproj">
+            BuildableName = "logx-tvOS.app"
+            BlueprintName = "logx-tvOS"
+            ReferencedContainer = "container:logx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "LogX-tvOS.app"
-            BlueprintName = "LogX-tvOS"
-            ReferencedContainer = "container:LogX.xcodeproj">
+            BuildableName = "logx-tvOS.app"
+            BlueprintName = "logx-tvOS"
+            ReferencedContainer = "container:logx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

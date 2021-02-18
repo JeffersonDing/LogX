@@ -21,8 +21,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'LogX' do
-  # Pods for LogX
+target 'logx' do
+  # Pods for logx
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -54,7 +54,7 @@ target 'LogX' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'LogXTests' do
+  target 'logxTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -71,10 +71,10 @@ target 'LogX' do
   end
 end
 
-target 'LogX-tvOS' do
-  # Pods for LogX-tvOS
+target 'logx-tvOS' do
+  # Pods for logx-tvOS
 
-  target 'LogX-tvOSTests' do
+  target 'logx-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

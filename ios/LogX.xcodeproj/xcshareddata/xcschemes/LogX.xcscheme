@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "LogX.app"
-               BlueprintName = "LogX"
-               ReferencedContainer = "container:LogX.xcodeproj">
+               BuildableName = "logx.app"
+               BlueprintName = "logx"
+               ReferencedContainer = "container:logx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "LogXTests.xctest"
-               BlueprintName = "LogXTests"
-               ReferencedContainer = "container:LogX.xcodeproj">
+               BuildableName = "logxTests.xctest"
+               BlueprintName = "logxTests"
+               ReferencedContainer = "container:logx.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "LogX.app"
-            BlueprintName = "LogX"
-            ReferencedContainer = "container:LogX.xcodeproj">
+            BuildableName = "logx.app"
+            BlueprintName = "logx"
+            ReferencedContainer = "container:logx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "LogX.app"
-            BlueprintName = "LogX"
-            ReferencedContainer = "container:LogX.xcodeproj">
+            BuildableName = "logx.app"
+            BlueprintName = "logx"
+            ReferencedContainer = "container:logx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
