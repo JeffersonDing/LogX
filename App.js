@@ -9,7 +9,7 @@ import {default as theme} from './src/styles/colors.json';
 export default () => (
   <>
     <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
+    <ApplicationProvider {...eva} theme={{...eva.dark, ...theme}}>
       <AppNavigator />
     </ApplicationProvider>
   </>
