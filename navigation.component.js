@@ -6,11 +6,14 @@ import {
   Icon,
   BottomNavigationTab,
 } from '@ui-kitten/components';
-import Home from './src/assets/Home';
+import Home from './src/assets/Home.js';
 import Explore from './src/assets/Explore';
 import Share from './src/assets/Share';
 import Profile from './src/assets/Profile';
 import Log from './src/assets/Log';
+import Login from './src/assets/Login';
+import Register from './src/assets/Register';
+
 const {Navigator, Screen} = createBottomTabNavigator();
 
 const HomeIcon = (props) => <Icon {...props} name="home" />;
@@ -33,17 +36,25 @@ const BottomTabBar = ({navigation, state}) => (
 );
 
 const TabNavigator = () => (
-  <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+  <Navigator
+    tabBar={(props) => <BottomTabBar {...props} />}
+    tabBarOptions={{
+      keyboardHidesTabBar: true,
+    }}>
     <Screen name="Home" component={Home} />
     <Screen name="Explore" component={Explore} />
     <Screen name="Log" component={Log} />
     <Screen name="Share" component={Share} />
-    <Screen name="Profile" component={Profile} />
+    {/*<Screen name="Profile" component={Profile} />*/}
+    <Screen name="Login" component={Login} />
+    <Screen name="Register" component={Register} />
   </Navigator>
 );
 
-export const AppNavigator = () => (
+const AppNavigator = () => (
   <NavigationContainer>
     <TabNavigator />
   </NavigationContainer>
 );
+
+export default AppNavigator;
