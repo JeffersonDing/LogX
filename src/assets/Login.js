@@ -1,16 +1,27 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Keyboard,
   View,
-  TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import {Text, Button, StyleService, useStyleSheet} from '@ui-kitten/components';
+import {
+  Text,
+  Button,
+  StyleService,
+  useStyleSheet,
+  Input,
+} from '@ui-kitten/components';
+import {AuthContext} from '../../navigation/AuthProvider';
 
 const Login = ({navigation}) => {
   const styles = useStyleSheet(LoginStyleSheet);
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const {GLogin, login} = useContext(AuthContext);
+
   return (
     <ScrollView>
       <KeyboardAvoidingView style={styles.containerView} behavior="padding">
@@ -18,29 +29,35 @@ const Login = ({navigation}) => {
           <View style={styles.loginScreenContainer}>
             <View style={styles.loginFormView}>
               <Text style={styles.logoText}>LogX</Text>
-              <TextInput
+              <Input
                 placeholder="Username"
+                value={userName}
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
+                onChangeText={(nextValue) => setUserName(nextValue)}
               />
-              <TextInput
+              <Input
                 placeholder="Password"
+                value={password}
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
+                onChangeText={(nextValue) => setPassword(nextValue)}
                 secureTextEntry={true}
               />
+              <Text style={styles.error}>{error}</Text>
               <Button
                 style={styles.loginButton}
-                onPress={() => this.onLoginPress()}>
+                onPress={() => {
+                  setError('Loading...');
+                  login(userName, password);
+                }}>
                 Log In
               </Button>
-              <Button
-                style={styles.fbLoginButton}
-                onPress={() => this.onGLoginPress()}>
+              <Button style={styles.GLoginButton} onPress={() => GLogin()}>
                 Login with Google
               </Button>
               <Button
-                style={styles.fbLoginButton}
+                style={styles.loginButton}
                 onPress={() => navigation.navigate('Register')}>
                 Register Page
               </Button>
@@ -75,8 +92,6 @@ const LoginStyleSheet = StyleService.create({
     width: '90%',
     fontSize: 14,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#eaeaea',
     backgroundColor: '#fafafa',
     paddingLeft: 10,
     marginLeft: 15,
@@ -91,11 +106,14 @@ const LoginStyleSheet = StyleService.create({
     height: 45,
     marginTop: 10,
   },
-  fbLoginButton: {
+  GLoginButton: {
     backgroundColor: '#3897f1',
     height: 45,
     width: '70%',
     marginTop: 10,
+  },
+  error: {
+    color: 'color-danger-default',
   },
 });
 export default Login;

@@ -1,5 +1,5 @@
-import React from 'react';
-import {SafeAreaView, View} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {SafeAreaView, View, Image} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -12,10 +12,46 @@ import styleSheet from '../styles/styles';
 import Feed from './components/Feed';
 import Notifications from './components/Notifications';
 import {ScrollView} from 'react-native-gesture-handler';
+import {AuthContext} from '../../navigation/AuthProvider';
+import database from '@react-native-firebase/database';
 
 const Home = () => {
   const styles = useStyleSheet(styleSheet);
   const homeStyles = useStyleSheet(homeStyleSheet);
+  const {user} = useContext(AuthContext);
+  const {userData, setUserData} = useContext(AuthContext);
+  const [pageData, setPageData] = useState({
+    first: '',
+    last: '',
+    cs: '',
+    notifications: 1,
+    pfp:
+      'https://firebasestorage.googleapis.com/v0/b/logx-472fa.appspot.com/o/public%2Favatar.png?alt=media&token=9348ad0e-dc26-42ad-9851-a37465e8a69f',
+  });
+
+  const userId = user.uid;
+
+  useEffect(() => {
+    const onValueChange = database()
+      .ref(`/users/${userId}`)
+      .on('value', (snapshot) => {
+        setData(snapshot.val());
+      });
+    const setData = (data) => {
+      setPageData({
+        first: data.info.first,
+        last: data.info.last,
+        cs: data.info.cs,
+        notifications: data.notifications.length,
+        pfp: user.photoURL,
+      });
+      setUserData(data);
+    };
+
+    // Stop listening for updates when no longer required
+    return () => database().ref(`/users/${userId}`).off('value', onValueChange);
+  }, [userId]);
+
   const Header = (props) => (
     <View {...props}>
       <Text category="h2" style={styles.textWhite}>
@@ -31,28 +67,25 @@ const Home = () => {
             <View style={styles.row}>
               <Avatar
                 style={homeStyles.avatar}
-                source={require('../img/test.png')}
+                source={{
+                  uri: pageData.pfp,
+                }}
               />
               <View style={{...styles.col, ...homeStyles.name}}>
+                <Text category="h2" style={styles.textWhite}>
+                  {pageData.first}
+                </Text>
                 <Text category="h4" style={styles.textWhite}>
-                  Paul
+                  {pageData.last}
                 </Text>
-                <Text category="h6" style={styles.textWhite}>
-                  McGregor
-                </Text>
-                <View style={styles.row}>
-                  <Text category="h6" style={styles.textWhite}>
-                    A
-                  </Text>
-                </View>
               </View>
             </View>
             <View style={styles.center}>
-              <Text style={homeStyles.callSign}>VA3 JFO</Text>
+              <Text style={homeStyles.callSign}>{pageData.cs}</Text>
             </View>
           </Card>
         </Layout>
-        <Notifications num="15" />
+        <Notifications num={pageData.notifications - 1} />
         <Feed
           pfp={require('../img/test.png')}
           name="Jonathan Esho"
@@ -74,13 +107,13 @@ const Home = () => {
 
 const homeStyleSheet = StyleService.create({
   name: {
-    marginLeft: 15,
+    marginLeft: 20,
   },
   introCard: {
     margin: 2,
     marginTop: 40,
     marginBottom: 20,
-    width: '85%',
+    width: '95%',
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -94,9 +127,8 @@ const homeStyleSheet = StyleService.create({
     backgroundColor: 'color-primary-500',
   },
   avatar: {
-    margin: 8,
-    height: 100,
-    width: 100,
+    height: 110,
+    width: 110,
   },
   callSign: {
     fontSize: 60,

@@ -1,17 +1,50 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Keyboard,
   Text,
   View,
-  TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import {Button, StyleService, useStyleSheet} from '@ui-kitten/components';
+import {
+  Button,
+  StyleService,
+  useStyleSheet,
+  Input,
+} from '@ui-kitten/components';
+import {AuthContext} from '../../navigation/AuthProvider';
 
 const Register = () => {
   const styles = useStyleSheet(LoginStyleSheet);
+  const [cs, setCs] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState({first: '', last: ''});
+  const [error, setError] = useState('');
+
+  const {register} = useContext(AuthContext);
+  const handleRegister = () => {
+    if (password !== confirm) {
+      setError("Passwords dosen't match");
+      return;
+    }
+    setError('Loading...');
+    fetch(`http://api.hamdb.org/${cs}/json/LogX`)
+      .then((json) => {
+        return json.json();
+      })
+      .then((data) => {
+        if (data.hamdb.callsign.name !== name.last) {
+          setError('Call Sign or name invalid');
+          return;
+        } else {
+          register(email, password, name.first, name.last, cs);
+        }
+      });
+  };
+
   return (
     <ScrollView>
       <KeyboardAvoidingView style={styles.containerView} behavior="padding">
@@ -19,29 +52,70 @@ const Register = () => {
           <View style={styles.loginScreenContainer}>
             <View style={styles.loginFormView}>
               <Text style={styles.logoText}>LogX</Text>
-              <TextInput
+              <Input
+                placeholder="Email"
+                value={email}
+                placeholderColor="#c4c3cb"
+                style={styles.loginFormTextInput}
+                secureTextEntry={false}
+                onChangeText={(nextValue) => setEmail(nextValue)}
+              />
+              <View style={styles.row}>
+                <Input
+                  placeholder="First Name"
+                  value={name}
+                  placeholderColor="#c4c3cb"
+                  style={styles.loginFormTextInputName}
+                  secureTextEntry={false}
+                  onChangeText={(nextValue) =>
+                    setName({first: nextValue, last: name.last})
+                  }
+                />
+                <Input
+                  placeholder="Last Name"
+                  value={name.last}
+                  placeholderColor="#c4c3cb"
+                  style={styles.loginFormTextInputName}
+                  secureTextEntry={false}
+                  onChangeText={(nextValue) =>
+                    setName({first: name.first, last: nextValue})
+                  }
+                />
+              </View>
+              <Input
                 placeholder="Call Sign"
+                value={cs}
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
-                secureTextEntry={true}
+                secureTextEntry={false}
+                onChangeText={(nextValue) => setCs(nextValue)}
               />
-              <TextInput
+              <Input
                 placeholder="Password"
+                value={password}
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
                 secureTextEntry={true}
+                onChangeText={(nextValue) => setPassword(nextValue)}
               />
-              <TextInput
+              <Input
                 placeholder="Repeat Password"
+                value={confirm}
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
                 secureTextEntry={true}
+                onChangeText={(nextValue) => setConfirm(nextValue)}
               />
-
+              <Text style={styles.error}>{error}</Text>
               <Button
                 style={styles.loginButton}
-                onPress={() => this.onLoginPress()}>
+                onPress={() => handleRegister()}>
                 Register
+              </Button>
+              <Button
+                style={styles.GLoginButton}
+                onPress={() => handleGoogle()}>
+                Register with Google
               </Button>
             </View>
           </View>
@@ -61,7 +135,7 @@ const LoginStyleSheet = StyleService.create({
   logoText: {
     fontSize: 40,
     fontWeight: '800',
-    marginTop: 150,
+    marginTop: 50,
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -74,8 +148,18 @@ const LoginStyleSheet = StyleService.create({
     width: '90%',
     fontSize: 14,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#eaeaea',
+    backgroundColor: '#fafafa',
+    paddingLeft: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  loginFormTextInputName: {
+    height: 43,
+    width: '41%',
+    fontSize: 14,
+    borderRadius: 5,
     backgroundColor: '#fafafa',
     paddingLeft: 10,
     marginLeft: 15,
@@ -90,11 +174,24 @@ const LoginStyleSheet = StyleService.create({
     height: 45,
     marginTop: 10,
   },
-  fbLoginButton: {
+  GLoginButton: {
     backgroundColor: '#3897f1',
     height: 45,
     width: '70%',
     marginTop: 10,
+  },
+  col: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  error: {
+    color: 'color-danger-default',
   },
 });
 export default Register;

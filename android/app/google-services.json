@@ -1,23 +1,24 @@
 {
   "project_info": {
     "project_number": "344769371871",
+    "firebase_url": "https://logx-472fa-default-rtdb.firebaseio.com",
     "project_id": "logx-472fa",
     "storage_bucket": "logx-472fa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:344769371871:android:96edbcd5edf787c187136a",
+        "mobilesdk_app_id": "1:344769371871:android:61da72c8f4ac817b87136a",
         "android_client_info": {
-          "package_name": "com.jeofo.logx"
+          "package_name": "com.logx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "344769371871-5a7fcevei40nvmrm62ihlnbfi7mncs2b.apps.googleusercontent.com",
+          "client_id": "344769371871-m7rmf0eovem3j7lgb70er9rfp4i2sptu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.jeofo.logx",
+            "package_name": "com.logx",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
