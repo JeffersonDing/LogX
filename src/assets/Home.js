@@ -15,7 +15,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {AuthContext} from '../../navigation/AuthProvider';
 import database from '@react-native-firebase/database';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const styles = useStyleSheet(styleSheet);
   const homeStyles = useStyleSheet(homeStyleSheet);
   const {user} = useContext(AuthContext);
@@ -29,11 +29,9 @@ const Home = () => {
       'https://firebasestorage.googleapis.com/v0/b/logx-472fa.appspot.com/o/public%2Favatar.png?alt=media&token=9348ad0e-dc26-42ad-9851-a37465e8a69f',
   });
 
-  const userId = user.uid;
-
   useEffect(() => {
     const onValueChange = database()
-      .ref(`/users/${userId}`)
+      .ref(`/users/${user.uid}`)
       .on('value', (snapshot) => {
         setData(snapshot.val());
       });
@@ -42,15 +40,16 @@ const Home = () => {
         first: data.info.first,
         last: data.info.last,
         cs: data.info.cs,
-        notifications: data.notifications.length,
-        pfp: user.photoURL,
+        notifications: data.notifications,
+        pfp: data.info.photoURL,
       });
       setUserData(data);
     };
 
     // Stop listening for updates when no longer required
-    return () => database().ref(`/users/${userId}`).off('value', onValueChange);
-  }, [userId]);
+    return () =>
+      database().ref(`/users/${user.uid}`).off('value', onValueChange);
+  }, [user]);
 
   const Header = (props) => (
     <View {...props}>
@@ -63,7 +62,10 @@ const Home = () => {
     <ScrollView>
       <SafeAreaView style={styles.safeView}>
         <Layout style={styles.upper}>
-          <Card style={homeStyles.introCard} header={Header}>
+          <Card
+            style={homeStyles.introCard}
+            header={Header}
+            onPress={() => navigation.navigate('Profile')}>
             <View style={styles.row}>
               <Avatar
                 style={homeStyles.avatar}
@@ -85,7 +87,7 @@ const Home = () => {
             </View>
           </Card>
         </Layout>
-        <Notifications num={pageData.notifications - 1} />
+        <Notifications num={Object.keys(pageData.notifications).length - 1} />
         <Feed
           pfp={require('../img/test.png')}
           name="Jonathan Esho"

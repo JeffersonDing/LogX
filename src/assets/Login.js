@@ -49,7 +49,13 @@ const Login = ({navigation}) => {
                 style={styles.loginButton}
                 onPress={() => {
                   setError('Loading...');
-                  login(userName, password);
+                  if (userName && password) {
+                    login(userName, password).catch((e) => {
+                      setError(e.message.split('] ')[1]);
+                    });
+                  } else {
+                    setError('Invalid Input');
+                  }
                 }}>
                 Log In
               </Button>
@@ -57,9 +63,9 @@ const Login = ({navigation}) => {
                 Login with Google
               </Button>
               <Button
-                style={styles.loginButton}
+                style={styles.registerButton}
                 onPress={() => navigation.navigate('Register')}>
-                Register Page
+                Register
               </Button>
             </View>
           </View>
@@ -106,6 +112,13 @@ const LoginStyleSheet = StyleService.create({
     height: 45,
     marginTop: 10,
   },
+  registerButton: {
+    backgroundColor: 'color-info-default',
+    width: '70%',
+    borderRadius: 5,
+    height: 45,
+    marginTop: 10,
+  },
   GLoginButton: {
     backgroundColor: '#3897f1',
     height: 45,
@@ -113,6 +126,13 @@ const LoginStyleSheet = StyleService.create({
     marginTop: 10,
   },
   error: {
+    width: '90%',
+    fontSize: 14,
+    paddingLeft: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 5,
+    marginBottom: 5,
     color: 'color-danger-default',
   },
 });

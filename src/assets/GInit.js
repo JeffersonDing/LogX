@@ -14,22 +14,16 @@ import {
   Input,
 } from '@ui-kitten/components';
 import {AuthContext} from '../../navigation/AuthProvider';
+import {ref} from '../helpers/RealTimeDB';
 
-const Register = () => {
+const GInit = (props) => {
   const styles = useStyleSheet(LoginStyleSheet);
   const [cs, setCs] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [email, setEmail] = useState('');
   const [name, setName] = useState({first: '', last: ''});
   const [error, setError] = useState('');
 
-  const {register} = useContext(AuthContext);
+  const {user, logout} = useContext(AuthContext);
   const handleRegister = () => {
-    if (password !== confirm) {
-      setError("Passwords dosen't match");
-      return;
-    }
     setError('Loading...');
     fetch(`http://api.hamdb.org/${cs}/json/LogX`)
       .then((json) => {
@@ -37,13 +31,32 @@ const Register = () => {
       })
       .then((data) => {
         if (data.hamdb.callsign.name !== name.last) {
-          setError(
-            'Call Sign or name invalid, please check your record on hamdb.org',
-          );
+          setError('Call Sign or name invalid');
           return;
         } else {
-          register(email, password, name.first, name.last, cs);
+          ref.child(`users/${user.uid}/`).set({
+            info: {
+              first: name.first,
+              last: name.last,
+              cs: cs,
+              email: user.email,
+              photoURL: user.photoURL,
+              address: {
+                country: '',
+                state: '',
+              },
+            },
+            contacts: {
+              _INIT_: user.uid,
+            },
+            notifications: {
+              _INIT_: user.uid,
+            },
+          });
         }
+      })
+      .then(() => {
+        props.onComplete();
       });
   };
 
@@ -54,18 +67,10 @@ const Register = () => {
           <View style={styles.loginScreenContainer}>
             <View style={styles.loginFormView}>
               <Text style={styles.logoText}>LogX</Text>
-              <Input
-                placeholder="Email"
-                value={email}
-                placeholderColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-                secureTextEntry={false}
-                onChangeText={(nextValue) => setEmail(nextValue)}
-              />
               <View style={styles.row}>
                 <Input
                   placeholder="First Name"
-                  value={name.first}
+                  value={name}
                   placeholderColor="#c4c3cb"
                   style={styles.loginFormTextInputName}
                   secureTextEntry={false}
@@ -92,32 +97,14 @@ const Register = () => {
                 secureTextEntry={false}
                 onChangeText={(nextValue) => setCs(nextValue)}
               />
-              <Input
-                placeholder="Password"
-                value={password}
-                placeholderColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-                secureTextEntry={true}
-                onChangeText={(nextValue) => setPassword(nextValue)}
-              />
-              <Input
-                placeholder="Repeat Password"
-                value={confirm}
-                placeholderColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-                secureTextEntry={true}
-                onChangeText={(nextValue) => setConfirm(nextValue)}
-              />
               <Text style={styles.error}>{error}</Text>
               <Button
                 style={styles.loginButton}
                 onPress={() => handleRegister()}>
-                Register
+                Complete Registration
               </Button>
-              <Button
-                style={styles.GLoginButton}
-                onPress={() => handleGoogle()}>
-                Register with Google
+              <Button style={styles.cancelButton} onPress={() => logout()}>
+                Cancel Registratoin
               </Button>
             </View>
           </View>
@@ -137,7 +124,7 @@ const LoginStyleSheet = StyleService.create({
   logoText: {
     fontSize: 40,
     fontWeight: '800',
-    marginTop: 50,
+    marginTop: 150,
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -176,10 +163,12 @@ const LoginStyleSheet = StyleService.create({
     height: 45,
     marginTop: 10,
   },
-  GLoginButton: {
-    backgroundColor: '#3897f1',
-    height: 45,
+  cancelButton: {
+    backgroundColor: 'color-danger-default',
+    borderWidth: 0,
     width: '70%',
+    borderRadius: 5,
+    height: 45,
     marginTop: 10,
   },
   col: {
@@ -193,14 +182,7 @@ const LoginStyleSheet = StyleService.create({
     justifyContent: 'flex-start',
   },
   error: {
-    width: '90%',
-    fontSize: 14,
-    paddingLeft: 10,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 5,
-    marginBottom: 5,
     color: 'color-danger-default',
   },
 });
-export default Register;
+export default GInit;

@@ -9,7 +9,6 @@ import {
   Icon,
   BottomNavigationTab,
 } from '@ui-kitten/components';
-import {getData} from '../src/helpers/RealTimeDB';
 import Home from '../src/assets/Home.js';
 import Explore from '../src/assets/Explore';
 import Share from '../src/assets/Share';
@@ -17,7 +16,8 @@ import Profile from '../src/assets/Profile';
 import Log from '../src/assets/Log';
 import Login from '../src/assets/Login';
 import Register from '../src/assets/Register';
-import Loading from '../src/assets/Loading';
+import GInit from '../src/assets/GInit';
+import {ref} from '../src/helpers/RealTimeDB';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -69,12 +69,32 @@ const AuthStack = (props) => {
 };
 const AppNavigator = () => {
   const {user, setUser} = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-  const [initializing, setInitializing] = useState(true);
+  const [initializing, setInitializing] = useState(false);
+  const [authStatus, setAuthStatus] = useState(false);
+
   const onAuthStateChanged = (user) => {
-    setUser(user);
-    if (initializing) setInitializing(false);
-    setLoading(false);
+    if (user) {
+      setUser(user);
+      ref
+        .child('users/')
+        .once('value')
+        .then((snapshot) => {
+          if (snapshot.child(user.uid).exists()) {
+            if (initializing) setInitializing(false);
+            setAuthStatus(true);
+            return;
+          } else {
+            setInitializing(true);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      setAuthStatus(false);
+      setInitializing(false);
+      setUser(user);
+    }
   };
 
   useEffect(() => {
@@ -82,12 +102,19 @@ const AppNavigator = () => {
     return subscriber; // unsubscribe on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  if (loading) {
-    return <Loading />;
+  if (initializing) {
+    return (
+      <GInit
+        onComplete={() => {
+          setAuthStatus(true);
+          setInitializing(false);
+        }}
+      />
+    );
   }
   return (
     <NavigationContainer>
-      {user ? <TabNavigator /> : <AuthStack />}
+      {authStatus ? <TabNavigator /> : <AuthStack />}
     </NavigationContainer>
   );
 };

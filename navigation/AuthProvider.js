@@ -49,36 +49,24 @@ export const AuthProvider = ({children}) => {
                   .ref('/public/avatar.png')
                   .getDownloadURL()
                   .then((url) => {
-                    data.user.updateProfile({
-                      photoURL: url,
-                    });
-                  })
-                  .then(() => {
                     ref.child(`users/${data.user.uid}/`).set({
                       info: {
                         first: first,
                         last: last,
                         cs: cs,
-                        email: '',
+                        email: email,
+                        photoURL: url,
                         address: {
                           country: '',
                           state: '',
                         },
                       },
                       contacts: {
-                        '34a44374-7250-4fe0-a716-72f5ef025802': {
-                          with: '',
-                          time: 0,
-                          status: false,
-                        },
+                        _INIT_: data.user.uid,
                       },
-                      notifications: [
-                        {
-                          id: '34a44374-7250-4fe0-a716-72f5ef025802',
-                          type: '',
-                          msg: '',
-                        },
-                      ],
+                      notifications: {
+                        _INIT_: data.user.uid,
+                      },
                     });
                   });
               });
@@ -96,46 +84,7 @@ export const AuthProvider = ({children}) => {
         GLogin: async () => {
           const {idToken} = await GoogleSignin.signIn();
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-          auth()
-            .signInWithCredential(googleCredential)
-            .then((data) => {
-              ref
-                .child('users/')
-                .once('value')
-                .then((snapshot) => {
-                  if (snapshot.child(data.user.uid).exists()) {
-                    return;
-                  } else {
-                    const names = data.user.displayName.split(' ');
-                    ref.child(`users/${data.user.uid}/`).set({
-                      info: {
-                        first: names[0],
-                        last: names[names.length - 1],
-                        cs: 'N/A',
-                        email: data.user.email,
-                        address: {
-                          country: '',
-                          state: '',
-                        },
-                      },
-                      contacts: {
-                        '34a44374-7250-4fe0-a716-72f5ef025802': {
-                          with: '',
-                          time: 0,
-                          status: false,
-                        },
-                      },
-                      notifications: [
-                        {
-                          id: '34a44374-7250-4fe0-a716-72f5ef025802',
-                          type: '',
-                          msg: '',
-                        },
-                      ],
-                    });
-                  }
-                });
-            });
+          auth().signInWithCredential(googleCredential);
         },
       }}>
       {children}

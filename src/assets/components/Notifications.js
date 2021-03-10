@@ -15,24 +15,22 @@ const ArrowIcon = (props) => (
 );
 const BellIcon = (props) => <Icon {...props} fill="#118AB2" name="bell" />;
 
-const Feed = (props) => {
+const Notifications = (props) => {
   const styles = useStyleSheet(styleSheet);
   const notiStyles = useStyleSheet(notiStyleSheet);
 
   return (
-    <SafeAreaView style={styles.safeView}>
-      <Layout style={styles.upper}>
-        <Card style={notiStyles.notiCard}>
-          <View style={{...styles.row, ...notiStyles.cardBody}}>
-            <BellIcon style={notiStyles.icon} />
-            <Text category="s1" style={styles.textBlack}>
-              You have {props.num} new notifications
-            </Text>
-            <ArrowIcon style={notiStyles.icon} />
-          </View>
-        </Card>
-      </Layout>
-    </SafeAreaView>
+    <Layout style={styles.upper}>
+      <Card style={{...notiStyles.notiCard, ...props.style}}>
+        <View style={{...styles.row, ...notiStyles.cardBody}}>
+          <BellIcon style={notiStyles.icon} />
+          <Text category="s1" style={styles.textBlack}>
+            You have {props.num} new notifications
+          </Text>
+          <ArrowIcon style={notiStyles.icon} />
+        </View>
+      </Card>
+    </Layout>
   );
 };
 
@@ -40,7 +38,7 @@ const notiStyleSheet = StyleService.create({
   notiCard: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
     width: '90%',
     borderRadius: 25,
@@ -66,4 +64,4 @@ const notiStyleSheet = StyleService.create({
   },
 });
 
-export default Feed;
+export default Notifications;
