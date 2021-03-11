@@ -20,6 +20,7 @@ const Home = ({navigation}) => {
   const homeStyles = useStyleSheet(homeStyleSheet);
   const {user} = useContext(AuthContext);
   const {userData, setUserData} = useContext(AuthContext);
+
   const [pageData, setPageData] = useState({
     first: '',
     last: '',
@@ -29,6 +30,16 @@ const Home = ({navigation}) => {
       'https://firebasestorage.googleapis.com/v0/b/logx-472fa.appspot.com/o/public%2Favatar.png?alt=media&token=9348ad0e-dc26-42ad-9851-a37465e8a69f',
   });
 
+  const getNotificationsCount = (notifications) => {
+    let count = 0;
+    Object.entries(notifications).forEach(([key, value]) => {
+      if (key != '_INIT_') {
+        count += Object.keys(value).length;
+      }
+    });
+    return count;
+  };
+
   useEffect(() => {
     const onValueChange = database()
       .ref(`/users/${user.uid}`)
@@ -36,16 +47,30 @@ const Home = ({navigation}) => {
         setData(snapshot.val());
       });
     const setData = (data) => {
-      setPageData({
-        first: data.info.first,
-        last: data.info.last,
-        cs: data.info.cs,
-        notifications: data.notifications,
-        pfp: data.info.photoURL,
-      });
+      if (
+        JSON.stringify(userData.notifications) !==
+        JSON.stringify(data.notifications)
+      ) {
+        const notificationCount = getNotificationsCount(data.notifications);
+        setPageData({
+          first: data.info.first,
+          last: data.info.last,
+          cs: data.info.cs,
+          notifications: notificationCount,
+          pfp: data.info.photoURL,
+        });
+        data = {...data, notificationCount: notificationCount};
+      } else {
+        setPageData({
+          ...pageData,
+          first: data.info.first,
+          last: data.info.last,
+          cs: data.info.cs,
+          pfp: data.info.photoURL,
+        });
+      }
       setUserData(data);
     };
-
     // Stop listening for updates when no longer required
     return () =>
       database().ref(`/users/${user.uid}`).off('value', onValueChange);
@@ -58,6 +83,19 @@ const Home = ({navigation}) => {
       </Text>
     </View>
   );
+  const notificationBar = (num) => {
+    if (num !== 0) {
+      return (
+        <Notifications
+          num={num}
+          onPress={() => navigation.navigate('Notifications')}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.safeView}>
@@ -87,7 +125,7 @@ const Home = ({navigation}) => {
             </View>
           </Card>
         </Layout>
-        <Notifications num={Object.keys(pageData.notifications).length - 1} />
+        {notificationBar(pageData.notifications)}
         <Feed
           pfp={require('../img/test.png')}
           name="Jonathan Esho"

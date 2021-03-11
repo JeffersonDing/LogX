@@ -21,9 +21,9 @@ const Notifications = (props) => {
 
   return (
     <Layout style={styles.upper}>
-      <Card style={{...notiStyles.notiCard, ...props.style}}>
+      <Card {...props} style={{...notiStyles.notiCard, ...props.style}}>
         <View style={{...styles.row, ...notiStyles.cardBody}}>
-          <BellIcon style={notiStyles.icon} />
+          <BellIcon style={{...notiStyles.icon, ...props.iconSize}} />
           <Text category="s1" style={styles.textBlack}>
             You have {props.num} new notifications
           </Text>

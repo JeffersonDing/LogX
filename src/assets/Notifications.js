@@ -5,11 +5,11 @@ import styles from '../styles/styles';
 import {AuthContext} from '../../navigation/AuthProvider';
 import {ref} from '../helpers/RealTimeDB';
 
-export const Explore = () => {
+export const Notifications = () => {
   const {user} = useContext(AuthContext);
   const postLog = () => {
     const location = ref
-      .child('users/V6F7ZDxDwRaaXW6HAHSYyqemqFM2/notifications')
+      .child(`users/VifxsCwqM4YiNE9LUPTr1Y6MfVw1/notifications/${user.uid}`)
       .push();
     location.set({
       cs: 'TEST CS',
@@ -35,4 +35,4 @@ export const Explore = () => {
     </SafeAreaView>
   );
 };
-export default Explore;
+export default Notifications;

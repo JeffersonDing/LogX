@@ -10,7 +10,7 @@ import {
   BottomNavigationTab,
 } from '@ui-kitten/components';
 import Home from '../src/assets/Home.js';
-import Explore from '../src/assets/Explore';
+import Notifications from '../src/assets/Notifications';
 import Share from '../src/assets/Share';
 import Profile from '../src/assets/Profile';
 import Log from '../src/assets/Log';
@@ -23,7 +23,7 @@ const {Navigator, Screen} = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const HomeIcon = (props) => <Icon {...props} name="home" />;
-const ExploreIcon = (props) => <Icon {...props} name="compass" />;
+const NotificationIcon = (props) => <Icon {...props} name="bell" />;
 const ShareIcon = (props) => <Icon {...props} name="layout" />;
 const LogIcon = (props) => <Icon {...props} name="grid" />;
 const ProfileIcon = (props) => <Icon {...props} name="person" />;
@@ -34,7 +34,7 @@ const BottomTabBar = ({navigation, state}) => (
     onSelect={(index) => navigation.navigate(state.routeNames[index])}
     appearance="noIndicator">
     <BottomNavigationTab title="Home" icon={HomeIcon} />
-    <BottomNavigationTab title="Explore" icon={ExploreIcon} />
+    <BottomNavigationTab title="Requests" icon={NotificationIcon} />
     <BottomNavigationTab title="Log" icon={LogIcon} />
     <BottomNavigationTab title="Share" icon={ShareIcon} />
     <BottomNavigationTab title="Profile" icon={ProfileIcon} />
@@ -48,7 +48,7 @@ const TabNavigator = () => (
       keyboardHidesTabBar: true,
     }}>
     <Screen name="Home" component={Home} />
-    <Screen name="Explore" component={Explore} />
+    <Screen name="Notifications" component={Notifications} />
     <Screen name="Log" component={Log} />
     <Screen name="Share" component={Share} />
     <Screen name="Profile" component={Profile} />

@@ -70,7 +70,7 @@ const GInit = (props) => {
               <View style={styles.row}>
                 <Input
                   placeholder="First Name"
-                  value={name}
+                  value={name.first}
                   placeholderColor="#c4c3cb"
                   style={styles.loginFormTextInputName}
                   secureTextEntry={false}

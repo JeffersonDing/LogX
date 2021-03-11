@@ -7,14 +7,18 @@ import LogList from './components/LogList';
 import {AuthContext} from '../../navigation/AuthProvider';
 import styleSheet from '../styles/styles';
 
-export const Log = () => {
+export const Log = ({navigation}) => {
   const styles = useStyleSheet(styleSheet);
   const {userData} = useContext(AuthContext);
 
   return (
     <SafeAreaView style={styles.safeView}>
       <View style={logStyles.notification}>
-        <Notifications num={Object.keys(userData.notifications).length - 1} />
+        <Notifications
+          num={userData.notificationCount}
+          onPress={() => navigation.navigate('Notifications')}
+          iconSize={{height: 25, width: 25}}
+        />
       </View>
       <View style={logStyles.searchbar}>
         <SearchBar />
