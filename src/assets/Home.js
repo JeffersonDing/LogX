@@ -14,6 +14,7 @@ import Notifications from './components/Notifications';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AuthContext} from '../../navigation/AuthProvider';
 import database from '@react-native-firebase/database';
+import {ref} from '../helpers/RealTimeDB';
 
 const Home = ({navigation}) => {
   const styles = useStyleSheet(styleSheet);
@@ -21,23 +22,30 @@ const Home = ({navigation}) => {
   const {user} = useContext(AuthContext);
   const {userData, setUserData} = useContext(AuthContext);
 
-  const [pageData, setPageData] = useState({
-    first: '',
-    last: '',
-    cs: '',
-    notifications: 1,
-    pfp:
-      'https://firebasestorage.googleapis.com/v0/b/logx-472fa.appspot.com/o/public%2Favatar.png?alt=media&token=9348ad0e-dc26-42ad-9851-a37465e8a69f',
-  });
-
-  const getNotificationsCount = (notifications) => {
-    let count = 0;
+  const getNotifications = (notifications) => {
+    let array = [];
     Object.entries(notifications).forEach(([key, value]) => {
-      if (key != '_INIT_') {
-        count += Object.keys(value).length;
+      if (key !== '_INIT_') {
+        Object.entries(value).forEach(([key, value]) => {
+          array.push(
+            new Promise((resolve, reject) => {
+              ref
+                .child(`users/${value.uid}/info`)
+                .once('value')
+                .then((snapshot) => {
+                  const data = snapshot.val();
+                  resolve({
+                    title: data.cs,
+                    description: new Date(value.time),
+                    photoURL: data.photoURL,
+                  });
+                });
+            }),
+          );
+        });
       }
     });
-    return count;
+    return array;
   };
 
   useEffect(() => {
@@ -46,30 +54,25 @@ const Home = ({navigation}) => {
       .on('value', (snapshot) => {
         setData(snapshot.val());
       });
+
     const setData = (data) => {
       if (
         JSON.stringify(userData.notifications) !==
         JSON.stringify(data.notifications)
       ) {
-        const notificationCount = getNotificationsCount(data.notifications);
-        setPageData({
-          first: data.info.first,
-          last: data.info.last,
-          cs: data.info.cs,
-          notifications: notificationCount,
-          pfp: data.info.photoURL,
-        });
-        data = {...data, notificationCount: notificationCount};
+        Promise.all(getNotifications(data.notifications)).then(
+          (notifications) => {
+            data = {
+              ...data,
+              notificationCount: Object.keys(notifications).length,
+              notificationData: notifications,
+            };
+            setUserData(data);
+          },
+        );
       } else {
-        setPageData({
-          ...pageData,
-          first: data.info.first,
-          last: data.info.last,
-          cs: data.info.cs,
-          pfp: data.info.photoURL,
-        });
+        setUserData(data);
       }
-      setUserData(data);
     };
     // Stop listening for updates when no longer required
     return () =>
@@ -108,24 +111,26 @@ const Home = ({navigation}) => {
               <Avatar
                 style={homeStyles.avatar}
                 source={{
-                  uri: pageData.pfp,
+                  uri:
+                    userData.info.photoURL ||
+                    'https://firebasestorage.googleapis.com/v0/b/logx-472fa.appspot.com/o/public%2Funnamed.png?alt=media&token=55c0d469-6656-495a-8539-007b11f891c2',
                 }}
               />
               <View style={{...styles.col, ...homeStyles.name}}>
                 <Text category="h2" style={styles.textWhite}>
-                  {pageData.first}
+                  {userData.info.first}
                 </Text>
                 <Text category="h4" style={styles.textWhite}>
-                  {pageData.last}
+                  {userData.info.last}
                 </Text>
               </View>
             </View>
             <View style={styles.center}>
-              <Text style={homeStyles.callSign}>{pageData.cs}</Text>
+              <Text style={homeStyles.callSign}>{userData.info.cs}</Text>
             </View>
           </Card>
         </Layout>
-        {notificationBar(pageData.notifications)}
+        {notificationBar(userData.notificationCount)}
         <Feed
           pfp={require('../img/test.png')}
           name="Jonathan Esho"

@@ -100,6 +100,7 @@ const LoginStyleSheet = StyleService.create({
     borderRadius: 5,
     backgroundColor: '#fafafa',
     paddingLeft: 10,
+    paddingRight: 10,
     marginLeft: 15,
     marginRight: 15,
     marginTop: 5,
