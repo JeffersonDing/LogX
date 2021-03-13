@@ -68,7 +68,7 @@ const AuthStack = (props) => {
   );
 };
 const AppNavigator = () => {
-  const {user, setUser} = useContext(AuthContext);
+  const {user, setUser, setUserData, userData} = useContext(AuthContext);
   const [initializing, setInitializing] = useState(false);
   const [authStatus, setAuthStatus] = useState(false);
 
@@ -94,6 +94,18 @@ const AppNavigator = () => {
       setAuthStatus(false);
       setInitializing(false);
       setUser(user);
+      setUserData({
+        contacts: '',
+        info: {
+          address: '',
+          cs: '',
+          email: '',
+          first: '',
+          last: '',
+          pfp: '',
+        },
+        notifications: [''],
+      });
     }
   };
 
