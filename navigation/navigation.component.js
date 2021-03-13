@@ -17,6 +17,8 @@ import Log from '../src/assets/Log';
 import Login from '../src/assets/Login';
 import Register from '../src/assets/Register';
 import GInit from '../src/assets/GInit';
+import LogDetail from '../src/assets/LogDetail';
+import AddLog from '../src/assets/AddLog';
 import {ref} from '../src/helpers/RealTimeDB';
 
 const {Navigator, Screen} = createBottomTabNavigator();
@@ -52,6 +54,8 @@ const TabNavigator = () => (
     <Screen name="Log" component={Log} />
     <Screen name="Share" component={Share} />
     <Screen name="Profile" component={Profile} />
+    <Screen name="LogDetails" component={LogDetail} />
+    <Screen name="AddLog" component={AddLog} />
   </Navigator>
 );
 

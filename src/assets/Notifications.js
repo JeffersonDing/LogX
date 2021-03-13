@@ -25,7 +25,7 @@ const postLog = () => {
   });
 };
 
-export const Notifications = () => {
+export const Notifications = ({navigation}) => {
   const {user, userData} = useContext(AuthContext);
   const notiStyles = useStyleSheet(notificationsStyleSheet);
   const renderItemAccessory = (props) => (
@@ -42,9 +42,11 @@ export const Notifications = () => {
       <ListItem
         title={`${item.title}`}
         description={`${item.description}`}
-        uri={{uri: 'test'}}
         accessoryLeft={() => <RenderAvatar uri={item.photoURL} />}
         accessoryRight={renderItemAccessory}
+        onPress={() =>
+          navigation.navigate('LogDetails', {status: false, lid: item.lid})
+        }
       />
     );
   };

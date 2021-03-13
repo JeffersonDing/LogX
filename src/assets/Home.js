@@ -35,6 +35,7 @@ const Home = ({navigation}) => {
                 .then((snapshot) => {
                   const data = snapshot.val();
                   resolve({
+                    lid: key,
                     title: data.cs,
                     description: new Date(value.time),
                     photoURL: data.photoURL,

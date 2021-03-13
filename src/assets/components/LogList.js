@@ -1,37 +1,55 @@
-import React from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {
-  StyleService,
-  useStyleSheet,
-  Layout,
-  Text,
-  Card,
-} from '@ui-kitten/components';
+import React, {useState} from 'react';
+import {FlatList, View, ScrollView} from 'react-native';
+import {StyleService, useStyleSheet, Layout, Text} from '@ui-kitten/components';
 import styleSheet from '../../styles/styles';
+
 import Item from './LogListItem';
 
 const LogList = (props) => {
   const styles = useStyleSheet(styleSheet);
   const listStyles = useStyleSheet(listStyleSheet);
 
-  const Header = () => (
-    <View>
-      <Text category="h3">{`${props.cs} LoogBook`}</Text>
-    </View>
-  );
+  const DATA = new Array(50).fill({
+    title: 'Title for Item',
+    description: 'Description for Item',
+  });
+  const Header = () => {
+    if (!props.search) {
+      return (
+        <View style={listStyles.header}>
+          <Text category="h3">{`${props.cs} LoogBook`}</Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={listStyles.header}>
+          <Text category="h3">{`User List`}</Text>
+        </View>
+      );
+    }
+  };
+
+  const renderItem = ({item, index}) => <Text>{`${item.title} ${index}`}</Text>;
 
   return (
-    <Layout style={styles.upper}>
-      <Card style={listStyles.card} header={Header}>
-        <ScrollView>
+    <Layout style={{...listStyles.container, ...styles.upper}}>
+      <View style={listStyles.card}>
+        <Header />
+        <FlatList
+          data={DATA}
+          style={listStyles.list}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+        {/*<ScrollView>
           <Item
             id="34a44374-7250-4fe0-a716-72f5ef025802"
             cs="VA3JFO"
             time={12341243}
             status={false}
           />
-        </ScrollView>
-      </Card>
+        </ScrollView>*/}
+      </View>
     </Layout>
   );
 };
@@ -39,18 +57,12 @@ const LogList = (props) => {
 const listStyleSheet = StyleService.create({
   card: {
     alignItems: 'center',
-    marginBottom: 80,
+    marginBottom: 20,
+    marginTop: 10,
+    backgroundColor: 'color-primary-transparent-200',
+    borderRadius: 10,
     width: '90%',
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-
-    elevation: 8,
+    height: '90%',
   },
   cardBody: {
     alignItems: 'center',
@@ -63,6 +75,13 @@ const listStyleSheet = StyleService.create({
     width: 40,
   },
   searchbar: {
+    width: '90%',
+  },
+  header: {
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  list: {
     width: '90%',
   },
 });
