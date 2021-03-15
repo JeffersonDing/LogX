@@ -1,0 +1,51 @@
+{
+  "AkHl26l80ugFrHGZS2Z4O3hsbEx2": {
+    "contacts": {
+      "_INIT_": "AkHl26l80ugFrHGZS2Z4O3hsbEx2"
+    },
+    "info": {
+      "address": "OBJ",
+      "cs": "VE3ID",
+      "email": "worldaffairs.it@gmail.com",
+      "first": "Jefferson",
+      "last": "Ding",
+      "photoURL": "https://image.flaticon.com/icons/png/512/147/147144.png"
+    },
+    "notifications": {
+      "_INIT_": "AkHl26l80ugFrHGZS2Z4O3hsbEx2"
+    }
+  },
+  "VifxsCwqM4YiNE9LUPTr1Y6MfVw1": {
+    "contacts": {
+      "_INIT_": "VifxsCwqM4YiNE9LUPTr1Y6MfVw1"
+    },
+    "info": {
+      "address": "OBJ",
+      "cs": "VA3JFO",
+      "email": "jefferson.ding@ucc.on.ca",
+      "first": "Jefferson",
+      "last": "Ding",
+      "photoURL": "https://www.w3schools.com/howto/img_avatar.png"
+    },
+    "notifications": {
+      "_INIT_": "VifxsCwqM4YiNE9LUPTr1Y6MfVw1"
+    }
+  },
+  "rwxPDsHOCzWhjXM4Ewe82xd9Z2q2": {
+    "contacts": {
+      "_INIT_": "rwxPDsHOCzWhjXM4Ewe82xd9Z2q2"
+    },
+    "info": {
+      "address": "OBJ",
+      "cs": "VA3JFO",
+      "email": "tyding2004@outlook.com",
+      "first": "Jefferson",
+      "last": "Ding",
+      "photoURL": "https://www.w3schools.com/howto/img_avatar.png"
+    },
+    "notifications": {
+      "_INIT_": "rwxPDsHOCzWhjXM4Ewe82xd9Z2q2",
+      "testing2": "OBJ"
+    }
+  }
+}

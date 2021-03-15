@@ -48,7 +48,6 @@ const Home = ({navigation}) => {
     });
     return array;
   };
-
   useEffect(() => {
     const onValueChange = database()
       .ref(`/users/${user.uid}`)

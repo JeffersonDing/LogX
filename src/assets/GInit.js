@@ -38,7 +38,7 @@ const GInit = (props) => {
             info: {
               first: name.first,
               last: name.last,
-              cs: cs,
+              cs: cs.toUpperCase(),
               email: user.email,
               photoURL: user.photoURL,
               address: {

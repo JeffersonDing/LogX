@@ -4,14 +4,16 @@ import {
   StyleService,
   useStyleSheet,
   Layout,
+  Image,
   Text,
   Card,
   Icon,
+  Avatar,
 } from '@ui-kitten/components';
 import styleSheet from '../../styles/styles';
 
 const ArrowIcon = (props) => (
-  <Icon {...props} fill="#8F9BB3" name="chevron-right" />
+  <Icon style={props.icon} fill="#8F9BB3" name="chevron-right" />
 );
 const BellIcon = (props) => <Icon {...props} fill="#118AB2" name="bell" />;
 
@@ -20,21 +22,56 @@ const LogListItem = (props) => {
   const itemStyles = useStyleSheet(itemStyleSheet);
 
   return (
-    <Card style={{...itemStyles.card, ...props.style}}>
-      <View style={styles.row}>
-        <Text>{props.cs}</Text>
-        <Text>{props.time}</Text>
+    <Card
+      style={props.style}
+      onPress={() =>
+        props.navigation.navigate('AddLog', {
+          uid: props.uid,
+          cs: props.cs,
+          name: props.name,
+          country: props.country,
+          photoURL: props.href,
+        })
+      }>
+      <View style={itemStyles.container}>
+        <View style={styles.row}>
+          <Avatar source={{uri: props.href}} style={itemStyles.avatar} />
+          <Text category="h5" style={itemStyles.textBox}>
+            {props.cs}
+          </Text>
+          <View style={{...styles.col, ...itemStyles.nameAddr}}>
+            <Text>{props.name}</Text>
+            <Text>{props.country}</Text>
+          </View>
+        </View>
+        <ArrowIcon icon={itemStyles.icon} />
       </View>
     </Card>
   );
 };
 
 const itemStyleSheet = StyleService.create({
-  card: {
+  avatar: {
+    height: 40,
+    width: 40,
+    marginRight: 15,
+  },
+  nameAddr: {
+    alignItems: 'flex-start',
+    width: 90,
+    marginLeft: 8,
+  },
+  icon: {
+    height: 40,
+    width: 40,
+  },
+  container: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 80,
-    width: '90%',
-    borderRadius: 25,
+    justifyContent: 'space-around',
+  },
+  textBox: {
+    width: 90,
   },
 });
 

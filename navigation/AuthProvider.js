@@ -53,7 +53,7 @@ export const AuthProvider = ({children}) => {
                       info: {
                         first: first,
                         last: last,
-                        cs: cs,
+                        cs: cs.toUpperCase(),
                         email: email,
                         photoURL: url,
                         address: {

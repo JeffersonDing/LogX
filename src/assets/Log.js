@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,33 +13,51 @@ import SearchBar from './components/SearchBar';
 import LogList from './components/LogList';
 import {AuthContext} from '../../navigation/AuthProvider';
 import styleSheet from '../styles/styles';
-import {ref} from '../helpers/RealTimeDB';
-
-const getUsers = (query, count) => {
-  ref
-    .child('users')
-    .orderByChild('info/cs')
-    .startAt(query)
-    .endAt(query + '\uf8ff')
-    .limitToFirst(count)
-    .once('value')
-    .then((snapshot) => {
-      console.log(snapshot.val());
-    });
-};
+import {getData, ref} from '../helpers/RealTimeDB';
 
 export const Log = ({navigation}) => {
   const styles = useStyleSheet(styleSheet);
   const {userData} = useContext(AuthContext);
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState('');
-  const [resLimit, setResLimit] = useState(5);
+  const [reqLimit, setReqLimit] = useState(5);
+  const [data, setData] = useState({});
+
+  const getUsers = () => {
+    if (query) {
+      ref
+        .child('users')
+        .orderByChild('info/cs')
+        .startAt(query)
+        .endAt(query + '\uf8ff')
+        .limitToFirst(reqLimit)
+        .once('value')
+        .then((snapshot) => {
+          setData(snapshot.val());
+        });
+    } else {
+      ref
+        .child('users')
+        .orderByChild('info/cs')
+        .limitToFirst(reqLimit)
+        .once('value')
+        .then((snapshot) => {
+          setData(snapshot.val());
+        });
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, [query]);
+  const getLogs = () => {};
 
   return (
     <TouchableWithoutFeedback
       style={logStyles.container}
       onPress={Keyboard.dismiss}
-      accessible={false}>
+      accessible={false}
+      disabled={!search}>
       <SafeAreaView style={styles.safeView}>
         <View style={logStyles.notification}>
           <Notifications
@@ -51,12 +69,24 @@ export const Log = ({navigation}) => {
         <View style={logStyles.searchbar}>
           <SearchBar
             onFocus={() => setSearch(true)}
-            onBlur={() => setSearch(false)}
+            onBlur={() => {
+              setSearch(false);
+              setReqLimit(5);
+            }}
             value={query}
-            onChangeText={setQuery}
+            onChangeText={(text) => {
+              setQuery(text);
+            }}
           />
         </View>
-        <LogList cs={userData.info.cs} search={search} />
+        <LogList
+          cs={userData.info.cs}
+          search={search}
+          data={data}
+          onBottom={setReqLimit}
+          limit={reqLimit}
+          navigation={navigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

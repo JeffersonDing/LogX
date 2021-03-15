@@ -8,11 +8,26 @@ import Item from './LogListItem';
 const LogList = (props) => {
   const styles = useStyleSheet(styleSheet);
   const listStyles = useStyleSheet(listStyleSheet);
+  let data;
+  try {
+    data = Object.entries(props.data);
+  } catch {
+    data = [
+      [
+        'No Results',
+        {
+          info: {
+            cs: 'No Results',
+            first: null,
+            last: null,
+            photoURL: null,
+            address: {country: null},
+          },
+        },
+      ],
+    ];
+  }
 
-  const DATA = new Array(50).fill({
-    title: 'Title for Item',
-    description: 'Description for Item',
-  });
   const Header = () => {
     if (!props.search) {
       return (
@@ -29,15 +44,34 @@ const LogList = (props) => {
     }
   };
 
-  const renderItem = ({item, index}) => <Text>{`${item.title} ${index}`}</Text>;
+  const renderItem = ({item, index}) => {
+    const data = item[1];
+    const uid = item[0];
+    try {
+      return (
+        <Item
+          cs={data.info.cs}
+          uid={uid}
+          navigation={props.navigation}
+          href={data.info.photoURL}
+          name={`${data.info.first} ${data.info.last.charAt(0)}.`}
+          country={data.info.address.country}
+          style={listStyles.item}
+        />
+      );
+    } catch {
+      return null;
+    }
+  };
 
   return (
     <Layout style={{...listStyles.container, ...styles.upper}}>
       <View style={listStyles.card}>
         <Header />
         <FlatList
-          data={DATA}
+          data={data}
           style={listStyles.list}
+          contentContainerStyle={listStyles.listContainer}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
@@ -81,8 +115,19 @@ const listStyleSheet = StyleService.create({
     marginTop: 5,
     marginBottom: 5,
   },
+  listContainer: {
+    flex: 1,
+    marginTop: 10,
+  },
   list: {
     width: '90%',
+  },
+  item: {
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: '100%',
+    height: 55,
+    borderRadius: 25,
   },
 });
 
