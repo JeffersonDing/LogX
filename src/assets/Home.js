@@ -24,13 +24,13 @@ const Home = ({navigation}) => {
 
   const getNotifications = (notifications) => {
     let array = [];
-    Object.entries(notifications).forEach(([key, value]) => {
-      if (key !== '_INIT_') {
-        Object.entries(value).forEach(([key, value]) => {
+    Object.entries(notifications).forEach(([okey, ovalue]) => {
+      if (okey !== '_INIT_') {
+        Object.entries(ovalue).forEach(([key, value]) => {
           array.push(
             new Promise((resolve, reject) => {
               ref
-                .child(`users/${value.uid}/info`)
+                .child(`users/${okey}/info`)
                 .once('value')
                 .then((snapshot) => {
                   const data = snapshot.val();
@@ -39,6 +39,7 @@ const Home = ({navigation}) => {
                     title: data.cs,
                     description: new Date(value.time),
                     photoURL: data.photoURL,
+                    loc: `${okey}/${key}`,
                   });
                 });
             }),

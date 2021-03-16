@@ -16,17 +16,18 @@ const EntryBar = (props) => {
     return (
       <View style={styles.row}>
         <Icon style={entryStyles.icon} fill="#8F9BB3" name={props.icon} />
-        <Text>{props.text}</Text>
       </View>
     );
   };
   return (
     <View style={{...entryStyles.cardBody, ...props.style}}>
       <Input
-        placeholder={props.text}
-        style={entryStyles.searchbar}
-        textStyle={entryStyles.textStyle}
+        caption={props.text}
         value={props.value}
+        style={entryStyles.searchbar}
+        numberOfLines={props.lines || 1}
+        textStyle={entryStyles.textStyle}
+        onChangeText={(text) => props.onChangeText(text)}
         accessoryLeft={EntryTitle}
         size="small"
         status="basic"
@@ -39,9 +40,9 @@ const EntryBar = (props) => {
 const entryStyleSheet = StyleService.create({
   cardBody: {
     flex: 1,
+    marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
     width: '90%',
   },
   icon: {
@@ -53,7 +54,8 @@ const entryStyleSheet = StyleService.create({
     margin: 2,
   },
   textStyle: {
-    fontSize: 16,
+    fontSize: 18,
+    color: 'black',
   },
 });
 

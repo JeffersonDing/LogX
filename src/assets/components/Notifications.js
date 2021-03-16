@@ -27,7 +27,7 @@ const Notifications = (props) => {
           <Text category="s1" style={styles.textBlack}>
             You have {props.num} new notifications
           </Text>
-          <ArrowIcon style={notiStyles.icon} />
+          {!props.disabled && <ArrowIcon style={notiStyles.icon} />}
         </View>
       </Card>
     </Layout>
@@ -54,7 +54,7 @@ const notiStyleSheet = StyleService.create({
   },
   cardBody: {
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     height: '80%',
     width: '100%',
   },

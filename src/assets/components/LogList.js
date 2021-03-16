@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {FlatList, View, ScrollView} from 'react-native';
+import {
+  FlatList,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import {StyleService, useStyleSheet, Layout, Text} from '@ui-kitten/components';
 import styleSheet from '../../styles/styles';
 
@@ -12,41 +18,24 @@ const LogList = (props) => {
   try {
     data = Object.entries(props.data);
   } catch {
-    data = [
-      [
-        'No Results',
-        {
-          info: {
-            cs: 'No Results',
-            first: null,
-            last: null,
-            photoURL: null,
-            address: {country: null},
-          },
-        },
-      ],
-    ];
+    data = null;
   }
 
   const Header = () => {
-    if (!props.search) {
-      return (
-        <View style={listStyles.header}>
-          <Text category="h3">{`${props.cs} LoogBook`}</Text>
-        </View>
-      );
-    } else {
-      return (
-        <View style={listStyles.header}>
-          <Text category="h3">{`User List`}</Text>
-        </View>
-      );
-    }
+    return (
+      <View style={listStyles.header}>
+        <Text category="h3">{props.title}</Text>
+      </View>
+    );
   };
 
   const renderItem = ({item, index}) => {
     const data = item[1];
     const uid = item[0];
+    if (uid === props.uid) {
+      return null;
+    }
+
     try {
       return (
         <Item
@@ -63,30 +52,85 @@ const LogList = (props) => {
       return null;
     }
   };
-
-  return (
-    <Layout style={{...listStyles.container, ...styles.upper}}>
-      <View style={listStyles.card}>
-        <Header />
+  const renderContactItem = ({item, index}) => {
+    const data = item[1];
+    const uid = item[0];
+    let cs, photoURL;
+    if (props.uid === data.from) {
+      cs = data.with_cs;
+      photoURL = data.with_url;
+    } else {
+      cs = data.from_cs;
+      photoURL = data.from_url;
+    }
+    if (uid === '_INIT_') {
+      return null;
+    }
+    try {
+      return (
+        <Item
+          cs={cs}
+          uid={uid}
+          search={props.search}
+          navigation={props.navigation}
+          href={photoURL}
+          name={`${data.band} ${data.freq}`}
+          country={`${data.pow} ${data.mode}`}
+          style={listStyles.item}
+        />
+      );
+    } catch {
+      return null;
+    }
+  };
+  const RenderList = () => {
+    if (props.search) {
+      return (
         <FlatList
           data={data}
           style={listStyles.list}
           contentContainerStyle={listStyles.listContainer}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => item[0]}
         />
-        {/*<ScrollView>
-          <Item
-            id="34a44374-7250-4fe0-a716-72f5ef025802"
-            cs="VA3JFO"
-            time={12341243}
-            status={false}
-          />
-        </ScrollView>*/}
+      );
+    } else {
+      return (
+        <FlatList
+          data={data}
+          style={listStyles.list}
+          contentContainerStyle={listStyles.listContainer}
+          renderItem={renderContactItem}
+          keyExtractor={(item, index) => item[0]}
+        />
+      );
+    }
+  };
+
+  return (
+    <Layout style={{...listStyles.container, ...styles.upper}}>
+      <View style={listStyles.card}>
+        <Header />
+        <RenderList />
       </View>
     </Layout>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
 
 const listStyleSheet = StyleService.create({
   card: {

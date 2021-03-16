@@ -28,8 +28,6 @@ const SearchBar = (props) => {
           value={props.query}
           onChangeText={(nextValue) => props.onChangeText(nextValue)}
           accessoryLeft={SearchIcon}
-          onFocus={() => props.onFocus()}
-          onBlur={() => props.onBlur()}
         />
       </View>
     </Layout>

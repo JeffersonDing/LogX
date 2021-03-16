@@ -112,7 +112,7 @@ export const Profile = () => {
               <View style={styles.row}>
                 <Text category="h5">Contacts: </Text>
                 <Text category="h5">
-                  {Object.keys(userData.contacts).length}
+                  {Object.keys(userData.contacts).length - 1}
                 </Text>
               </View>
               <View style={styles.row}>
@@ -156,7 +156,9 @@ export const Profile = () => {
         <Card style={profileStyles.card} header={cardHeader}>
           <View style={styles.row}>
             <Text category="h5">Contacts: </Text>
-            <Text category="h5">{Object.keys(userData.contacts).length}</Text>
+            <Text category="h5">
+              {Object.keys(userData.contacts).length - 1}
+            </Text>
           </View>
           <View style={styles.row}>
             <Text category="h5">Posts: </Text>
