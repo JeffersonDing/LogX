@@ -15,24 +15,28 @@ import styleSheet from '../../styles/styles';
 const ArrowIcon = (props) => (
   <Icon style={props.icon} fill="#8F9BB3" name="chevron-right" />
 );
-const BellIcon = (props) => <Icon {...props} fill="#118AB2" name="bell" />;
 
 const LogListItem = (props) => {
   const styles = useStyleSheet(styleSheet);
   const itemStyles = useStyleSheet(itemStyleSheet);
-
+  const navigationPage = (search) => {
+    if (search) {
+      props.navigation.navigate('AddLog', {
+        uid: props.uid,
+        cs: props.cs,
+        name: props.name,
+        country: props.country,
+        photoURL: props.href,
+      });
+    } else {
+      props.navigation.navigate('LogDetails', {
+        lid: props.logid,
+        valid: true,
+      });
+    }
+  };
   return (
-    <Card
-      style={props.style}
-      onPress={() =>
-        props.navigation.navigate('AddLog', {
-          uid: props.uid,
-          cs: props.cs,
-          name: props.name,
-          country: props.country,
-          photoURL: props.href,
-        })
-      }>
+    <Card style={props.style} onPress={() => navigationPage(props.search)}>
       <View style={itemStyles.container}>
         <View style={styles.row}>
           <Avatar source={{uri: props.href}} style={itemStyles.avatar} />

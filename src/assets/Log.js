@@ -14,7 +14,6 @@ export const Log = ({navigation}) => {
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState(false);
   const [data, setData] = useState({});
-
   const getUsers = () => {
     if (query) {
       ref

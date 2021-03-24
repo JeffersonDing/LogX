@@ -42,6 +42,7 @@ const LogList = (props) => {
           cs={data.info.cs}
           uid={uid}
           navigation={props.navigation}
+          search={props.search}
           href={data.info.photoURL}
           name={`${data.info.first} ${data.info.last.charAt(0)}.`}
           country={data.info.address.country}
@@ -54,7 +55,7 @@ const LogList = (props) => {
   };
   const renderContactItem = ({item, index}) => {
     const data = item[1];
-    const uid = item[0];
+    const logid = item[0];
     let cs, photoURL;
     if (props.uid === data.from) {
       cs = data.with_cs;
@@ -63,14 +64,14 @@ const LogList = (props) => {
       cs = data.from_cs;
       photoURL = data.from_url;
     }
-    if (uid === '_INIT_') {
+    if (logid === '_INIT_') {
       return null;
     }
     try {
       return (
         <Item
           cs={cs}
-          uid={uid}
+          logid={logid}
           search={props.search}
           navigation={props.navigation}
           href={photoURL}
@@ -116,22 +117,6 @@ const LogList = (props) => {
     </Layout>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
-
 const listStyleSheet = StyleService.create({
   card: {
     alignItems: 'center',

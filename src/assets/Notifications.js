@@ -51,7 +51,7 @@ export const Notifications = ({navigation}) => {
         accessoryLeft={() => <RenderAvatar uri={item.photoURL} />}
         accessoryRight={() => renderItemAccessory(item.lid, item.loc)}
         onPress={() =>
-          navigation.navigate('LogDetails', {status: false, lid: item.lid})
+          navigation.navigate('LogDetails', {valid: false, lid: item.lid})
         }
       />
     );
