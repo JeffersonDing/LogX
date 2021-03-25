@@ -32,6 +32,7 @@ const LogListItem = (props) => {
       props.navigation.navigate('LogDetails', {
         lid: props.logid,
         valid: true,
+        loc: null,
       });
     }
   };

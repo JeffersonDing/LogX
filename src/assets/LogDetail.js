@@ -11,9 +11,7 @@ import {
 import {SafeAreaView, Image, View, BackHandler} from 'react-native';
 import styleSheet from '../styles/styles';
 import {AuthContext} from '../../navigation/AuthProvider';
-import {NavigationRouteContext, useFocusEffect} from '@react-navigation/core';
 import {ref} from '../helpers/RealTimeDB';
-import {resolveConfig} from 'prettier';
 
 const SwapIcon = (props) => <Icon {...props} fill="#118AB2" name="swap" />;
 
@@ -21,22 +19,7 @@ const LogDetail = ({route, navigation}) => {
   const detailStyles = useStyleSheet(detailStyleSheet);
   const styles = useStyleSheet(styleSheet);
   const {user, userData} = useContext(AuthContext);
-  const params = route.params;
-  const getLogDetails = (valid, lid) => {
-    return new Promise((res, rej) => {
-      if (valid) {
-        res(userData.contacts[lid]);
-      } else {
-        ref
-          .child(`logs/pending/${lid}`)
-          .once('value')
-          .then((snapshot) => {
-            res(snapshot.val());
-          });
-      }
-    });
-  };
-
+  let params = route.params;
   const [logData, setLogData] = useState({
     band: null,
     comment: null,
@@ -54,6 +37,46 @@ const LogDetail = ({route, navigation}) => {
     with_cs: null,
     with_url: null,
   });
+
+  const getLogDetails = (valid, lid) => {
+    return new Promise((res, rej) => {
+      if (valid) {
+        res(userData.contacts[lid]);
+      } else {
+        ref
+          .child(`logs/pending/${lid}`)
+          .once('value')
+          .then((snapshot) => {
+            res(snapshot.val());
+          });
+      }
+    });
+  };
+  const handleAccept = (dat) => {
+    ref
+      .child(`logs/pending/${dat.lid}`)
+      .once('value')
+      .then((snapshot) => {
+        const data = snapshot.val();
+        ref.child(`logs/verified/${dat.lid}`).set(data);
+      })
+      .then(() => {
+        ref.child(`users/${user.uid}/notifications/${dat.loc}`).remove();
+      })
+      .then(() => {
+        params.valid = true;
+      });
+  };
+
+  const handleDecline = (dat) => {
+    ref
+      .child(`logs/pending/${dat.lid}`)
+      .remove()
+      .then(() => {
+        ref.child(`users/${user.uid}/notifications/${dat.loc}`).remove();
+      });
+  };
+
   useEffect(() => {
     getLogDetails(params.valid, params.lid).then((res) => {
       setLogData(res);
@@ -122,7 +145,10 @@ const LogDetail = ({route, navigation}) => {
   return (
     <SafeAreaView>
       <View style={detailStyles.container}>
-        <View style={detailStyles.header}>
+        <View
+          style={
+            params.valid ? detailStyles.header : detailStyles.headerPending
+          }>
           <View style={detailStyles.headerContent}>
             <View style={styles.col}>
               <Image
@@ -143,7 +169,7 @@ const LogDetail = ({route, navigation}) => {
                   uri: logData.with_url,
                 }}
               />
-              <Text style={detailStyles.name}>{userData.info.cs}</Text>
+              <Text style={detailStyles.name}>{logData.with_cs}</Text>
             </View>
           </View>
         </View>
@@ -168,12 +194,19 @@ const LogDetail = ({route, navigation}) => {
             <Button
               style={detailStyles.cancel}
               onPress={() => {
+                handleDecline(params);
                 navigation.goBack();
               }}>
               Decline
             </Button>
           )}
-          {!params.valid && <Button style={detailStyles.submit}>Accept</Button>}
+          {!params.valid && (
+            <Button
+              style={detailStyles.submit}
+              onPress={() => handleAccept(params)}>
+              Accept
+            </Button>
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -183,6 +216,9 @@ const LogDetail = ({route, navigation}) => {
 const detailStyleSheet = StyleService.create({
   header: {
     backgroundColor: 'color-success-default',
+  },
+  headerPending: {
+    backgroundColor: 'color-danger-default',
   },
   headerContent: {
     padding: 30,

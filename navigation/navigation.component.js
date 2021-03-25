@@ -84,7 +84,7 @@ const AppNavigator = () => {
         .once('value')
         .then((snapshot) => {
           if (snapshot.child(user.uid).exists()) {
-            if (initializing) setInitializing(false);
+            setInitializing(false);
             setAuthStatus(true);
             return;
           } else {
